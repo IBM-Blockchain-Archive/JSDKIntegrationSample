@@ -74,7 +74,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
     public static final String TEST_CHANNEL = "ricks-test-channel";
 
-    static final SampleStore SAMPLE_STORE = new SampleStore(new File("bmxBlockChainTestStore.properties"));
+    static final SampleStore SAMPLE_STORE = new SampleStore(new File("bmxBlockChainSampleStore.properties"));
     public static final String NETWORK_CONFIG_FILE = "bmxServiceCredentials.json";
 
     public static final String PEER_ADMIN_NAME = "admin";
