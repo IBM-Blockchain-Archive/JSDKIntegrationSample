@@ -35,6 +35,7 @@ import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonReader;
+import javax.json.JsonString;
 import javax.json.JsonValue;
 
 import org.apache.commons.codec.binary.Hex;
@@ -75,7 +76,8 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
     public static final String TEST_CHANNEL = "ricks-test-channel";
 
     static final SampleStore SAMPLE_STORE = new SampleStore(new File("bmxBlockChainSampleStore.properties"));
-    public static final String NETWORK_CONFIG_FILE = "bmxServiceCredentials.json";
+    //    public static final String NETWORK_CONFIG_FILE = "bmxServiceCredentials.json";
+    public static final String NETWORK_CONFIG_FILE = "multiChannel.json";
 
     public static final String PEER_ADMIN_NAME = "admin";
 
@@ -98,8 +100,11 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
     private void run(String[] args) throws Exception {
 
-        // Network network = parseNetworkConfigFile(new File("bmxServiceCredentials.json"));
         NetworkConfig networkConfig = parseNetworkConfigFile(new File(NETWORK_CONFIG_FILE));
+
+     //   NetworkConfig.ChannelConfig channel1 = networkConfig.getChannel(TEST_CHANNEL);
+//        Map<String, NetworkConfig.OrdererConfig> orderers = channel1.getOrderers();
+//        Map<String, NetworkConfig.OrganizationConfig.PeerConfig> peers = channel1.getPeers();
 
         SampleUser admin;
 
@@ -658,6 +663,28 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
             return orderers;
         }
 
+        Map<String, ChannelConfig> channels = null;
+
+        Map<String, ChannelConfig> getChannels() {
+            if (null == channels) {
+
+                channels = new HashMap<>();
+                for (Map.Entry<String, JsonValue> orgEntry : value.getJsonObject("channels").entrySet()) {
+
+                    ChannelConfig channelConfig = new ChannelConfig(orgEntry.getKey(), (JsonObject) orgEntry.getValue());
+                    channels.put(channelConfig.getName(), channelConfig);
+                }
+
+            }
+
+            return channels;
+        }
+
+        ChannelConfig getChannel(String name) {
+
+            return getChannels().get(name);
+        }
+
         OrdererConfig getOrderer(String name) {
             return getOrderers().get(name);
         }
@@ -856,6 +883,73 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
         class OrdererConfig extends EndPoint {
             OrdererConfig(String name, JsonObject value) {
                 super(name, value);
+            }
+
+        }
+
+        class ChannelConfig {
+            final String name;
+            private final JsonObject value;
+
+            public ChannelConfig(String name, JsonObject value) {
+                this.name = name;
+                this.value = value;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            Map<String, OrdererConfig> orderers = null;
+
+            Map<String, OrdererConfig> getOrderers() {
+                if (orderers == null) {
+
+                    orderers = new HashMap<>();
+
+                    JsonArray orderersNames = value.getJsonArray("orderers");
+
+                    assert orderers != null : "Expected registars to not be null.";
+
+                    for (Iterator<JsonValue> it = orderersNames.iterator(); it.hasNext();
+                            ) {
+                        JsonString ordererName = (JsonString) it.next();
+                        OrdererConfig ordererConfig = NetworkConfig.this.getOrderer(ordererName.getString());
+                        assert ordererConfig != null : format("Orderer %s for channel %s not found", ordererConfig, name);
+                        orderers.put(ordererName.getString(), ordererConfig);
+
+                    }
+                }
+
+                return orderers;
+            }
+
+            OrdererConfig getOrderer(String name) {
+                return getOrderers().get(name);
+            }
+
+            Map<String, OrganizationConfig.PeerConfig> peers = null;
+
+            Map<String, OrganizationConfig.PeerConfig> getPeers() {
+                if (peers == null) {
+
+                    peers = new HashMap<>();
+
+                    for (String peerName : value.getJsonObject("peers").keySet()) {
+
+                        OrganizationConfig.PeerConfig peerConfig =
+                                NetworkConfig.this.getOrganization(NETWORK_CONFIG_PEERORG).getPeer(peerName);
+                        assert peerConfig != null : format("Peer %s not found for channel %s", peerName, name);
+                        peers.put(peerName, peerConfig);
+                    }
+                }
+
+                return peers;
+            }
+
+            OrganizationConfig.PeerConfig getPeer(String name) {
+                return getPeers().get(name);
+
             }
 
         }
