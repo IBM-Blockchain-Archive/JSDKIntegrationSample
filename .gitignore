@@ -3,3 +3,4 @@ target/**
 .git/**
 *.json
 bmxBlockChainSampleStore.properties
+bluemix-fabric-sdk.iml
