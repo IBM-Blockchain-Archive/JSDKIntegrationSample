@@ -64,15 +64,16 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BMXHyperledgerFabricJSDKIntegrationSample {
 
-    public static final String NETWORK_CONFIG_PEERORG_CA = "fabric-ca-peerorg1-20659a"; //Only test with this CA
+    public static final String NETWORK_CONFIG_PEERORG_CA = "fabric-ca-peerorg1-23033a"; //Only test with this CA
 
     public static final String NETWORK_CONFIG_PEERORG = "PeerOrg1"; //Only test with this peer org
 
     public static final String TEST_CHANNEL = "ricks-test-channel";
 
     static final SampleStore SAMPLE_STORE = new SampleStore(new File("bmxBlockChainSampleStore.properties"));
-    //  public static final String NETWORK_CONFIG_FILE = "bmxServiceCredentials.json";
-    public static final String NETWORK_CONFIG_FILE = "multiChannel.json";
+
+    public static final String NETWORK_CONFIG_FILE = "bmxServiceCredentials.json";
+
 
     public static final String PEER_ADMIN_NAME = "admin";
 
@@ -87,7 +88,10 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
     private static final byte[] EXPECTED_EVENT_DATA = "!".getBytes(UTF_8);
 
     public static void main(String[] args) throws Exception {
+        System.setProperty("org.hyperledger.fabric.sdk.channel.genesisblock_wait_time", 60000 * 15 + "");
         new BMXHyperledgerFabricJSDKIntegrationSample().run(args);
+
+
 
     }
 
@@ -96,10 +100,6 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
     private void run(String[] args) throws Exception {
 
         NetworkConfig networkConfig = parseNetworkConfigFile(new File(NETWORK_CONFIG_FILE));
-
-        NetworkConfig.ChannelConfig channel1 = networkConfig.getChannel(TEST_CHANNEL);
-        Map<String, NetworkConfig.OrdererConfig> orderers = channel1.getOrderers();
-        Map<String, NetworkConfig.OrganizationConfig.PeerConfig> peers = channel1.getPeers();
 
         SampleUser admin;
 
@@ -175,7 +175,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
         assert !orderers.isEmpty() : "No Orderers were found in network configuration file!";
         assert !peers.isEmpty() : "No Peers were found in network configuration file!";
-   //     assert !eventHubs.isEmpty() : "No Event hubs were found in network configuration file!";
+        //     assert !eventHubs.isEmpty() : "No Event hubs were found in network configuration file!";
 
         Channel channel = client.newChannel(channelName);
 
