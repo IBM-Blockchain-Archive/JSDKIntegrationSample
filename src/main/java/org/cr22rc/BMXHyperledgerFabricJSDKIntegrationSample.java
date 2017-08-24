@@ -152,7 +152,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
         //If channel information exists in the configuration then just filter it out otherwise just assume all;
         if (null != networkConfigChannel) {
 
-            HashMap<String, Orderer> channelOrders = new HashMap<>(orderers);
+            HashMap<String, Orderer> channelOrders = new HashMap<>(orderers); //copy
             for (String name : orderers.keySet()) {
                 if (null == networkConfigChannel.getOrderer(name)) {
                     channelOrders.remove(name);
@@ -160,7 +160,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
             }
             orderers = channelOrders;
 
-            HashMap<String, Peer> channelPeers = new HashMap<>(peers);
+            HashMap<String, Peer> channelPeers = new HashMap<>(peers); //copies..
             HashMap<String, EventHub> channelEventHubs = new HashMap<>(eventHubs);
 
             for (String name : peers.keySet()) {
@@ -171,12 +171,11 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
             }
             peers = channelPeers;
             eventHubs = channelEventHubs;
-
         }
 
         assert !orderers.isEmpty() : "No Orderers were found in network configuration file!";
         assert !peers.isEmpty() : "No Peers were found in network configuration file!";
-        assert !eventHubs.isEmpty() : "No Event hubs were found in network configuration file!";
+   //     assert !eventHubs.isEmpty() : "No Event hubs were found in network configuration file!";
 
         Channel channel = client.newChannel(channelName);
 
