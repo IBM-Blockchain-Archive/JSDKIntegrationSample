@@ -147,6 +147,32 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
         Map<String, EventHub> eventHubs = new HashMap<>();
 
         constructFabricEndpointsNetworkConfig(client, networkConfig, orderers, peers, eventHubs);
+        NetworkConfig.ChannelConfig networkConfigChannel = networkConfig.getChannel(channelName);
+
+        //If channel information exists in the configuration then just filter it out otherwise just assume all;
+        if (null != networkConfigChannel) {
+
+            HashMap<String, Orderer> channelOrders = new HashMap<>(orderers);
+            for (String name : orderers.keySet()) {
+                if (null == networkConfigChannel.getOrderer(name)) {
+                    channelOrders.remove(name);
+                }
+            }
+            orderers = channelOrders;
+
+            HashMap<String, Peer> channelPeers = new HashMap<>(peers);
+            HashMap<String, EventHub> channelEventHubs = new HashMap<>(eventHubs);
+
+            for (String name : peers.keySet()) {
+                if (null == networkConfigChannel.getPeer(name)) {
+                    channelPeers.remove(name);
+                    channelEventHubs.remove(name);
+                }
+            }
+            peers = channelPeers;
+            eventHubs = channelEventHubs;
+
+        }
 
         assert !orderers.isEmpty() : "No Orderers were found in network configuration file!";
         assert !peers.isEmpty() : "No Peers were found in network configuration file!";
