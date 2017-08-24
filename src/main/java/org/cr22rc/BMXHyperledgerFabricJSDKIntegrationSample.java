@@ -74,7 +74,6 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
     public static final String NETWORK_CONFIG_FILE = "bmxServiceCredentials.json";
 
-
     public static final String PEER_ADMIN_NAME = "admin";
 
     private static final int TRANSACTION_WAIT_TIME = 60000 * 6;
@@ -83,15 +82,12 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
     private static final String CHAIN_CODE_NAME = "example_cc_go";
     private static final String CHAIN_CODE_PATH = "github.com/example_cc";
     private static final String CHAIN_CODE_VERSION = "1";
-    private static final String TEST_FIXTURES_PATH = "src/test/fixture";
     private static final long PROPOSAL_WAIT_TIME = 60000 * 5;
     private static final byte[] EXPECTED_EVENT_DATA = "!".getBytes(UTF_8);
 
     public static void main(String[] args) throws Exception {
         System.setProperty("org.hyperledger.fabric.sdk.channel.genesisblock_wait_time", 60000 * 15 + "");
         new BMXHyperledgerFabricJSDKIntegrationSample().run(args);
-
-
 
     }
 
@@ -136,7 +132,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
         client.setUserContext(admin);
 
         Channel testChannel = constructChannelFromNetworkConfig(client, networkConfig, TEST_CHANNEL);
-        runChannel(client, testChannel, true, 10);
+        runChannel(client, testChannel, 10);
 
     }
 
@@ -207,7 +203,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
     }
 
     //CHECKSTYLE.OFF: Method length is 320 lines (max allowed is 150).
-    void runChannel(HFClient client, Channel channel, boolean installChaincode, int delta) {
+    void runChannel(HFClient client, Channel channel, int delta) {
 
         class ChaincodeEventCapture { //A test class to capture chaincode events
             final String handle;
@@ -265,47 +261,45 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
                     .setVersion(CHAIN_CODE_VERSION)
                     .setPath(CHAIN_CODE_PATH).build();
 
-            if (installChaincode) {
-                ////////////////////////////
-                // Install Proposal Request
-                //
+            ////////////////////////////
+            // Install Proposal Request
+            //
 
-                out("Creating install proposal");
+            out("Creating install proposal");
 
-                InstallProposalRequest installProposalRequest = client.newInstallProposalRequest();
-                installProposalRequest.setChaincodeID(chaincodeID);
+            InstallProposalRequest installProposalRequest = client.newInstallProposalRequest();
+            installProposalRequest.setChaincodeID(chaincodeID);
 
-                installProposalRequest.setChaincodeSourceLocation(new File("chaincode/gocc/sample1"));
+            installProposalRequest.setChaincodeSourceLocation(new File("chaincode/gocc/sample1"));
 
-                installProposalRequest.setChaincodeVersion(CHAIN_CODE_VERSION);
+            installProposalRequest.setChaincodeVersion(CHAIN_CODE_VERSION);
 
-                out("Sending install proposal");
+            out("Sending install proposal");
 
-                ////////////////////////////
-                // only a client from the same org as the peer can issue an install request
-                int numInstallProposal = 0;
-                //    Set<String> orgs = orgPeers.keySet();
-                //   for (SampleOrg org : testSampleOrgs) {
+            ////////////////////////////
+            // only a client from the same org as the peer can issue an install request
+            int numInstallProposal = 0;
+            //    Set<String> orgs = orgPeers.keySet();
+            //   for (SampleOrg org : testSampleOrgs) {
 
-                Collection<Peer> peersFromOrg = channel.getPeers();
-                numInstallProposal = numInstallProposal + peersFromOrg.size();
-                responses = client.sendInstallProposal(installProposalRequest, peersFromOrg);
+            Collection<Peer> peersFromOrg = channel.getPeers();
+            numInstallProposal = numInstallProposal + peersFromOrg.size();
+            responses = client.sendInstallProposal(installProposalRequest, peersFromOrg);
 
-                for (ProposalResponse response : responses) {
-                    if (response.getStatus() == ProposalResponse.Status.SUCCESS) {
-                        out("Successful install proposal response Txid: %s from peer %s", response.getTransactionID(), response.getPeer().getName());
-                        successful.add(response);
-                    } else {
-                        failed.add(response);
-                    }
+            for (ProposalResponse response : responses) {
+                if (response.getStatus() == ProposalResponse.Status.SUCCESS) {
+                    out("Successful install proposal response Txid: %s from peer %s", response.getTransactionID(), response.getPeer().getName());
+                    successful.add(response);
+                } else {
+                    failed.add(response);
                 }
+            }
 
-                out("Received %d install proposal responses. Successful+verified: %d . Failed: %d", numInstallProposal, successful.size(), failed.size());
+            out("Received %d install proposal responses. Successful+verified: %d . Failed: %d", numInstallProposal, successful.size(), failed.size());
 
-                if (failed.size() > 0) {
-                    ProposalResponse first = failed.iterator().next();
-                    fail("Not enough endorsers for install :" + successful.size() + ".  " + first.getMessage());
-                }
+            if (failed.size() > 0) {
+                ProposalResponse first = failed.iterator().next();
+                fail("Not enough endorsers for install :" + successful.size() + ".  " + first.getMessage());
             }
 
             ///////////////
@@ -615,7 +609,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
         Properties properties = new Properties();
         properties.put("pemBytes", certificateAuthority.getTLSCerts().getBytes());
-        properties.setProperty("allowAllHostNames", "true");
+
         HFCAClient hfcaClient = HFCAClient.createNewInstance(certificateAuthority.getCAName(),
                 certificateAuthority.getURL(), properties);
         hfcaClient.setCryptoSuite(CryptoSuite.Factory.getCryptoSuite());
