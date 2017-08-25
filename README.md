@@ -48,5 +48,10 @@ Run command:
 ## Introduction Video
 An introduction video is in Videos/bmxJSDKIntro.webm
 
+
+[![demo video]](https://github.com/IBM-Blockchain/JSDKIntegrationSample/blob/master/Videos/bmxJSDKIntro.webm)
+
+
+
 ## Video Screen Shots
 Screen shots are in screenShots directory
