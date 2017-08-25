@@ -4,3 +4,4 @@ target/**
 *.json
 bmxBlockChainSampleStore.properties
 bluemix-fabric-sdk.iml
+screenShots/notNeeded/**
