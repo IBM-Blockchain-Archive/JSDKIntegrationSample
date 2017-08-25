@@ -42,6 +42,7 @@
 
     </dependencies>
 
+
     <build>
         <plugins>
             <plugin>
@@ -51,8 +52,18 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-        </plugins>
-    </build>
 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.2.1</version>
+                 <configuration>
+                    <mainClass>org.cr22rc.BMXHyperledgerFabricJSDKIntegrationSample</mainClass>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
+                </configuration>
+            </plugin>
+        </plugins>
+
+    </build>
 
 </project>

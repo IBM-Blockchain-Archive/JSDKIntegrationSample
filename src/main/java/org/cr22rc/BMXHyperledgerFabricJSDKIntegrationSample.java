@@ -133,6 +133,9 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
         Channel testChannel = constructChannelFromNetworkConfig(client, networkConfig, TEST_CHANNEL);
         runChannel(client, testChannel, 10);
+        testChannel.shutdown(true);
+        out("Channel %s shutdown is done", testChannel.getName());
+
 
     }
 
@@ -221,7 +224,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
         try {
 
             final String channelName = channel.getName();
-            boolean isFooChain = true;
+
             out("Running channel %s", channelName);
             channel.setTransactionWaitTime(TRANSACTION_WAIT_TIME);
             channel.setDeployWaitTime(DEPLOY_WAIT_TIME);
@@ -247,13 +250,6 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
                                 new String(chaincodeEvent.getPayload()), blockEvent.getEventHub().toString());
 
                     });
-
-            //For non foo channel unregister event listener to test events are not called.
-            if (!isFooChain) {
-                channel.unRegisterChaincodeEventListener(chaincodeEventListenerHandle);
-                chaincodeEventListenerHandle = null;
-
-            }
 
             final String chaincodeName = CHAIN_CODE_NAME + "_" + System.currentTimeMillis();
 
@@ -547,9 +543,13 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
                 }
 
+
+
             }
 
             out("Running for Channel %s done", channelName);
+
+            return;
 
         } catch (Exception e) {
             out("Caught an exception running channel %s", channel.getName());
