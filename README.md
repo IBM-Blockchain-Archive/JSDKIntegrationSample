@@ -9,6 +9,8 @@
  
 ## Running
 
+The code can not be run until a BlueMix Block Chain network has been created.  See video for details. 
+
 Run command: 
 ```mvn exec:java -Dexec.mainClass="org.cr22rc.BMXHyperledgerFabricJSDKIntegrationSample"```
 
