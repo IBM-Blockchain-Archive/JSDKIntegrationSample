@@ -136,7 +136,6 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
         testChannel.shutdown(true);
         out("Channel %s shutdown is done", testChannel.getName());
 
-
     }
 
     private Channel constructChannelFromNetworkConfig(HFClient client, NetworkConfig networkConfig, String channelName) throws Exception {
@@ -543,8 +542,6 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
                 }
 
-
-
             }
 
             out("Running for Channel %s done", channelName);
@@ -577,6 +574,13 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
             properties.setProperty("sslProvider", "openSSL");
             properties.setProperty("negotiationType", "TLS");
 
+            String pemString = ordererConfig.getTLSCerts();
+            if (pemString != null) {
+
+                properties.put("pemBytes", pemString.getBytes());
+
+            }
+
             orderers.put(ordererConfig.getName(), client.newOrderer(ordererConfig.getName(), ordererConfig.getURL(),
                     properties));
         }
@@ -586,6 +590,12 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
             Properties properties = peerConfig.getProperties();
             properties.setProperty("sslProvider", "openSSL");
             properties.setProperty("negotiationType", "TLS");
+
+            String pemString = peerConfig.getTLSCerts();
+            if (null != pemString) {
+                properties.put("pemBytes", pemString.getBytes());
+
+            }
 
             peers.put(peerConfig.getName(), client.newPeer(peerConfig.getName(), peerConfig.getURL(),
                     properties));
