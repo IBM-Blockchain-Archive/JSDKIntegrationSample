@@ -513,7 +513,7 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
 
             if (chaincodeEventListenerHandle != null) {
 
-                channel.unRegisterChaincodeEventListener(chaincodeEventListenerHandle);
+                channel.unregisterChaincodeEventListener(chaincodeEventListenerHandle);
                 //Should be two. One event in chaincode and two notification for each of the two event hubs
 
                 final int numberEventHubs = channel.getEventHubs().size();
