@@ -64,11 +64,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class BMXHyperledgerFabricJSDKIntegrationSample {
 
-    public static final String NETWORK_CONFIG_PEERORG_CA = "fabric-ca-peerorg1-23033a"; //Only test with this CA
+    public static final String NETWORK_CONFIG_PEERORG_CA = "fabric-ca-peerorg1-20621a"; //Only test with this CA
 
     public static final String NETWORK_CONFIG_PEERORG = "PeerOrg1"; //Only test with this peer org
 
-    public static final String TEST_CHANNEL = "ricks-test-channel";
+    public static final String TEST_CHANNEL = "java-test-channel";
 
     static final SampleStore SAMPLE_STORE = new SampleStore(new File("bmxBlockChainSampleStore.properties"));
 
@@ -108,7 +108,8 @@ public class BMXHyperledgerFabricJSDKIntegrationSample {
             NetworkConfig.NetworkConfigUser networkConfigRegistrar = certificateAuthority.getRegistrar(PEER_ADMIN_NAME);
             admin = SAMPLE_STORE.getMember(PEER_ADMIN_NAME, NETWORK_CONFIG_PEERORG);
             admin.setEnrollmentSecret(networkConfigRegistrar.getEnrollSecret());
-            admin.setAffiliation(networkConfigRegistrar.getAffiliation());
+            if(networkConfigRegistrar.getAffiliation() != null)
+                admin.setAffiliation(networkConfigRegistrar.getAffiliation());
             admin.setMspId(networkConfigRegistrar.getMspId());
 
         }
