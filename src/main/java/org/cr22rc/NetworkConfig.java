@@ -171,9 +171,8 @@ class NetworkConfig {
         }
 
         String getMspid() {
-            if(value.containsKey("mspid"))
-                return value.getString("mspid");
-            return null;
+
+            return value.getString("mspid");
         }
 
         public OrganizationConfig.CertificateAuthorityConfig getCertificateAuthority(String name) {
@@ -212,9 +211,7 @@ class NetworkConfig {
             }
 
             public String getCAName() {
-                if(value.containsKey("caName"))
-                   return value.getString("caName");
-                return null;
+                  return value.getString("caName");
             }
 
             NetworkConfigUser getRegistrar(String name) {
@@ -281,9 +278,7 @@ class NetworkConfig {
             }
 
             public String getEventURL() {
-                if(value.containsKey("eventUrl"))
-                    return value.getString("eventUrl");
-                return null;
+                return value.getString("eventUrl");
             }
 
         }
@@ -305,9 +300,9 @@ class NetworkConfig {
         }
 
         public String getAffiliation() {
-             if(value.containsKey("affiliation"))
-                 return value.getString("affiliation");
-             return null;
+			if(value.containsKey("affiliation"))
+                return value.getString("affiliation");
+			return null;
         }
 
         public String getEnrollSecret() {
