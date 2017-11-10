@@ -1,7 +1,7 @@
 This document shows how to integrate the IBM hyperledger Java SDK with IBM bluemix blockchain. To use Bluemix IBM Blockchain Service, follow https://github.com/IBM-Blockchain/marbles/blob/v4.0/docs/use_bluemix_hyperledger.md to create a Blockchain Network in IBM Bluemix, peers (up to 3) and a channel. 
 
 ## Hyperledger Fabric Java SDK  Version
- Requires Java SDK 1.1.0-SNAPSHOT
+ Requires Hyperledger Fabric Java SDK 1.1.0-SNAPSHOT
  
 ## Down load the repository 
 git clone https://github.com/IBM-Blockchain/JSDKIntegrationSample
