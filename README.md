@@ -1,49 +1,47 @@
 # BMXHyperledgerFabricJSDKIntegrationSample
 
+This document shows how to integrate the IBM hyperledger Java SDK with IBM bluemix blockchain. To use Bluemix IBM Blockchain Service, follow https://github.com/IBM-Blockchain/marbles/blob/v4.0/docs/use_bluemix_hyperledger.md to create a Blockchain Network in IBM Bluemix, peers (up to 3) and a channel. You can change the channel name from “marbles-trading-alliance” to “java-test-channel” (or you named channel name). 
+
 ## Hyperledger Fabric Java SDK  Version
- This code is dependent on a 1.1.0-SNAPSHOT
+ Requires Java SDK 1.1.0-SNAPSHOT
  
- To reference this snapshot repository update your Maven settings .m2/settings.xml file with the below profile:
- 
- 
- ```
- <?xml version="1.0" encoding="UTF-8"?>
- <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0                           https://maven.apache.org/xsd/settings-1.0.0.xsd">
-    <profiles>
-       <profile>
-          <id>allow-snapshots</id>
-          <activation>
-             <activeByDefault>true</activeByDefault>
-          </activation>
-          <repositories>
-             <repository>
-                <id>snapshots-repo</id>
-                <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                <releases>
-                   <enabled>false</enabled>
-                </releases>
-                <snapshots>
-                   <enabled>true</enabled>
-                </snapshots>
-             </repository>
-          </repositories>
-       </profile>
-    </profiles>
- </settings>
+## Down load the repository to your local 
+git clone https://github.com/IBM-Blockchain/JSDKIntegrationSample
 
+## Obtain the content of "Service Credential" from bluemix network and save it as "bmxServiceCredentials.json"
+From your dashboard Overview, click on "Service Credentials", copy and paste all the information to a file named "bmxServiceCredentials.json". Save this file to the location where you download the repository
+![serviceCredentials](images/serviceCredential.png)
 
-```
+## Modify BMXHyperledgerFabricJSDKIntegrationSample.java with your own data
+Two places need to be changed:
+NETWORK_CONFIG_PEERORG_CA: get network ca information from bmxServiceCredentials.json
+TEST_CHANNEL: update with your own channel name. (e.g. java-test-channel)
+![javeSampleCode](images/javaSampleCode.png)
 
 ## Installing
  Run command:
   ```mvn install```
+ Go to the download folder and issue “mvn install”, confirm with “BUILD SUCCESS” message
+ ![installBuild](images/installBuild.png)
  
 ## Running
 
-The code can not be run until a BlueMix Block Chain network has been created.  See video for details. 
-
 Run command: 
 ```mvn exec:java -Dexec.mainClass="org.cr22rc.BMXHyperledgerFabricJSDKIntegrationSample"```
+First time run, it will generate the cert for user "admin", and credential info was saved to "bmxBlockChainSampleStore.properties"
+![installBuild](images/execution.png)
+
+## Upload the certification to bluemix
+
+Copy and paste CERTFICATE from java test case output to bluemix web GUI
+![memberView](images/member.png)
+![addCert](images/addCert.png)
+
+Tip: if the submit button is disabled, just add CR to ------END CERTIFICATE-----
+
+## Running it again
+We should able to see invoke transaction and query runs are successful.
+![runTest](images/runTest.png)
 
 ## Introduction Video
 An introduction video is in Videos/bmxJSDKIntro.webm
