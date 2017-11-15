@@ -171,6 +171,7 @@ class NetworkConfig {
         }
 
         String getMspid() {
+
             return value.getString("mspid");
         }
 
@@ -210,7 +211,7 @@ class NetworkConfig {
             }
 
             public String getCAName() {
-                return value.getString("caName");
+                  return value.getString("caName");
             }
 
             NetworkConfigUser getRegistrar(String name) {
@@ -232,7 +233,8 @@ class NetworkConfig {
 
                     NetworkConfigUser networkConfigUser = new NetworkConfigUser(registrar.getEnrollId(),
                             OrganizationConfig.this.getMspid(), registrar.getEnrollSecret());
-                    networkConfigUser.affiliation = registrar.getAffiliation();
+                    if(registrar.getAffiliation() != null)
+                       networkConfigUser.affiliation = registrar.getAffiliation();
 
                     ret.put(registrar.getEnrollId(), networkConfigUser);
 
@@ -292,15 +294,21 @@ class NetworkConfig {
         }
 
         public String getEnrollId() {
-            return value.getString("enrollId");
+            if(value.containsKey("enrollId"))
+                return value.getString("enrollId");
+            return null;
         }
 
         public String getAffiliation() {
-            return value.getString("affiliation");
+			if(value.containsKey("affiliation"))
+                return value.getString("affiliation");
+			return null;
         }
 
         public String getEnrollSecret() {
-            return value.getString("enrollSecret");
+            if(value.containsKey("enrollSecret"))
+                return value.getString("enrollSecret");
+            return null;
         }
 
     }
@@ -316,7 +324,10 @@ class NetworkConfig {
         }
 
         public String getURL() {
-            return value.getString("url");
+            if(value.containsKey("url"))
+                return value.getString("url");
+            return null;
+
         }
 
         public String getName() {
@@ -324,7 +335,9 @@ class NetworkConfig {
         }
 
         public String getTLSCerts() {
-            return value.getJsonObject("tlsCACerts").getString("pem");
+            if(value.containsKey("tlsCACerts"))
+                return value.getJsonObject("tlsCACerts").getString("pem");
+            return null;
 
         }
 
